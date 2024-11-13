@@ -21,7 +21,10 @@
 				"njpwerner.autodocstring",
 				"ms-python.debugpy",
 				"zeshuaro.vscode-python-poetry",
-				"cstrap.flask-snippets"
+				"cstrap.flask-snippets",
+				"yzhang.markdown-all-in-one",
+				"tamasfe.even-better-toml",
+				"kamilturek.vscode-pyproject-toml-snippets"
 			]
 		}
 	}
