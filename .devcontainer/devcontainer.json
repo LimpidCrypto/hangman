@@ -12,7 +12,7 @@
 		8080
 	],
 	// 👇 Use 'postCreateCommand' to run commands after the container is created.
-	"postStartCommand": "poetry env use ~/.pyenv/versions/3.13.*/bin/python",
+	"postStartCommand": "cd backend && poetry env use ~/.pyenv/versions/3.13.*/bin/python",
 	// 👇 Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
