@@ -1,5 +1,4 @@
 FROM mcr.microsoft.com/devcontainers/base:jammy
-# FROM mcr.microsoft.com/devcontainers/base:jammy 
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG USER=vscode
@@ -29,17 +28,32 @@ RUN DEBIAN_FRONTEND=noninteractive \
 USER $USER
 ARG HOME="/home/$USER"
 ARG PYTHON_VERSION=3.13
-# ARG PYTHON_VERSION=3.10
+ARG NODE_MAJOR=20
+# ARG NODE_VERSION=22.11.0
 
 ENV PYENV_ROOT="${HOME}/.pyenv"
 ENV PATH="${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${HOME}/.local/bin:$PATH"
 
-RUN echo "done 0" \
+RUN echo "installing pyenv..." \
     && curl https://pyenv.run | bash \
-    && echo "done 1" \
+    && echo "installing python" \
     && pyenv install ${PYTHON_VERSION} \
-    && echo "done 2" \
+    && echo "set python version" \
     && pyenv global ${PYTHON_VERSION} \
-    && echo "done 3" \
+    && echo "install" \
     && curl -sSL https://install.python-poetry.org | python3 - \
     && poetry config virtualenvs.in-project true
+
+RUN echo "install node.js"
+RUN sudo apt-get update \
+    && sudo apt-get install -y gnupg \
+    && sudo mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+RUN sudo apt-get update && sudo apt-get install nodejs -y
+# # get install script and pass it to execute: 
+# RUN curl -sL https://deb.nodesource.com/setup_20.x | bash
+# # and install node 
+# RUN apt install nodejs
+# RUN node --version
+# RUN npm --version
