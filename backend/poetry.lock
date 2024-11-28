@@ -329,7 +329,18 @@ MarkupSafe = ">=2.1.1"
 [package.extras]
 watchdog = ["watchdog (>=2.3)"]
 
+[[package]]
+name = "zufallsworte"
+version = "0.0.6"
+description = "Generates random German words from a 300,000 word list"
+optional = false
+python-versions = ">=3"
+files = [
+    {file = "zufallsworte-0.0.6-py2.py3-none-any.whl", hash = "sha256:2f1604a61530edadc2322f9281f759d7120040f2f32c188a6e279549848c38ae"},
+    {file = "zufallsworte-0.0.6.tar.gz", hash = "sha256:44a702fb358f3d5ae7519c76b3355a00f15450f40c36327039bbdf536c838348"},
+]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.13"
-content-hash = "6d593ae0af62cfcdb35b84b6f3a2f1785bf9890a3b20c68efa50996d4f31f01d"
+content-hash = "4433c3e01513a74c3726ec198a78b5b3dc540a7ad57f6eb50bfa9d67ffa33ef9"
