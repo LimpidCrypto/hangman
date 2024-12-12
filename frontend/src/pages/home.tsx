@@ -1,8 +1,10 @@
+import UserInput from "../components/userInput";
 
 export default function Home() {
     return (
-        <div>
-            <h1>Home</h1>
+        <div className="flex flex-col justify-center">
+            <h1 className="font-red">Hangman</h1>
+            <UserInput />
         </div>
     );
 }

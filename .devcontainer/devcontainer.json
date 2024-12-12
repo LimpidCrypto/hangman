@@ -24,7 +24,8 @@
 				"cstrap.flask-snippets",
 				"yzhang.markdown-all-in-one",
 				"tamasfe.even-better-toml",
-				"kamilturek.vscode-pyproject-toml-snippets"
+				"kamilturek.vscode-pyproject-toml-snippets",
+				"bradlc.vscode-tailwindcss"
 			]
 		}
 	}
