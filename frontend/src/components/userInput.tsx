@@ -1,7 +1,7 @@
-import { Input } from "@mui/material";
+import clsx from "clsx";
 
-export default function UserInput() {
+export default function UserInput({ className }: { className: string }) {
     return (
-        <Input placeholder="Enter a username" />
+        <input required type="text" placeholder="Enter a username" className={clsx("input w-full", className)} />
     )
 }
