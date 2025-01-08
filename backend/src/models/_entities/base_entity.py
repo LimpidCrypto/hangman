@@ -101,7 +101,7 @@ class BaseEntity(Generic[M], ABC):
         except (FileNotFoundError, JSONDecodeError, SerdeError) as error:
             raise error
 
-    def     all(self, dm: DataStoreManager[M]) -> List[M]:
+    def all(self, dm: DataStoreManager[M]) -> List[M]:
         """Finds all entries in the data store.
 
         Args:
@@ -138,6 +138,30 @@ class BaseEntity(Generic[M], ABC):
         try:
             self._read_all(dm)
             dm.remove_entry(self.data_list, self.matching_entries)
+        except (FileNotFoundError, JSONDecodeError, SerdeError) as error:
+            raise error
+
+    def update(self, dm: DataStoreManager[M], model: M) -> M:
+        """Updates an entry in the data store.
+
+        Args:
+            dm (DataStoreManager): The data manager to use.
+            model (M): The model to update.
+
+        Raises:
+            FileNotFoundError: If the data store file is not found.
+            JSONDecodeError: If the data store file is not a valid JSON file.
+            SerdeError: If the data cannot be deserialized.
+
+        Returns:
+            M: The updated model.
+        """
+        try:
+            self._read_all(dm)
+            if self.matching_entries:
+                dm.update_entry(self.data_list, to_dict(model), self.matching_entries)
+                return model
+            return None
         except (FileNotFoundError, JSONDecodeError, SerdeError) as error:
             raise error
 
