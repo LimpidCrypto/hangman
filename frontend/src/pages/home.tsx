@@ -3,7 +3,6 @@ import UserList from "../components/userList";
 import DefaultLayout from "../layouts/default";
 import { routes } from "../config/routes";
 import { None, Option } from "ts-results";
-import { appConfig } from "../config/app";
 
 const handleUserFormSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<Option<string>> => {
     event.preventDefault();

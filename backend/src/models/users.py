@@ -32,7 +32,7 @@ def create_user(list_model: NewUserModel) -> UserModel:
     try:
         return UserEntity().create(
             DataStoreManager,
-            DataList.LISTS,
+            DataList.USERS,
             UserModel(id=str(uuid4()), name=list_model.name, last_active=datetime.now().timestamp()),
         )
     except (FileNotFoundError, JSONDecodeError, SerdeError) as error:

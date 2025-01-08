@@ -101,7 +101,7 @@ class BaseEntity(Generic[M], ABC):
         except (FileNotFoundError, JSONDecodeError, SerdeError) as error:
             raise error
 
-    def all(self, dm: DataStoreManager[M]) -> List[M]:
+    def     all(self, dm: DataStoreManager[M]) -> List[M]:
         """Finds all entries in the data store.
 
         Args:
