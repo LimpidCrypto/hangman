@@ -7,10 +7,7 @@
 	// 👇 Features to add to the Dev Container. More info: https://containers.dev/implementors/features.
 	// "features": {},
 	// 👇 Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [
-		3000,
-		8080
-	],
+	"forwardPorts": [],
 	// 👇 Use 'postCreateCommand' to run commands after the container is created.
 	"postStartCommand": "cd backend && poetry env use ~/.pyenv/versions/3.13.*/bin/python",
 	// 👇 Configure tool-specific properties.
