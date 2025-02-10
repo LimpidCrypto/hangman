@@ -1,3 +1,4 @@
+from enum import Enum
 from src.models.data_store_manager import DataStoreManager, DataList
 from typing import List, Optional, Self, TypeVar, Generic, Dict, Any
 from json import JSONDecodeError
@@ -11,7 +12,7 @@ M = TypeVar("M")
 class BaseEntity(Generic[M], ABC):
     matching_entries: List[M] = []
     data_list: DataList
-    where_list: List[Dict[str, Any]] = []
+    where_list: List[Dict[Enum, Any]] = []
     entry_id: Optional[UUID] = None
 
     def __init__(self):
@@ -45,7 +46,7 @@ class BaseEntity(Generic[M], ABC):
         self.entry_id = entry_id
         return self
 
-    def where(self, field: str, value: Any) -> Self:
+    def where(self, field: Enum, value: Any) -> Self:
         """Filters entries in the data store by a field value.
 
         Args:
@@ -186,7 +187,7 @@ class BaseEntity(Generic[M], ABC):
                 # check if all where conditions are met
                 for where in self.where_list:
                     for key, value in where.items():
-                        if entry[key] != value:
+                        if entry[key.value] != value:
                             is_match = False
                 # check if id is set and matches
                 if self.entry_id:

@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from serde import SerdeError, serde
 from src.models.data_store_manager import DataList, DataStoreManager
-from src.models._entities import GamesEntity, GamesModel
+from src.models._entities import GamesEntity, GamesModel, GamesColumn, UserWordsModel
 
 @serde
 class NewGame():
@@ -28,10 +28,21 @@ def create_game(new_game: NewGame) -> str:
                 id=game_uuid,
                 type=new_game.game_type,
                 users=new_game.usernames,
-                user_words=[],
+                user_scores={ username: 0 for username in new_game.usernames },
                 difficulty=new_game.difficulty,
             )
         )
     except (FileNotFoundError, JSONDecodeError, SerdeError) as error:
         raise error
 
+def get_game(game_id: str) -> GamesModel:
+    return GamesEntity().find(DataList.GAMES).where(GamesColumn.ID, game_id).one(DataStoreManager)
+
+def get_user_words(game_id: str) -> List[UserWordsModel]:
+    return get_game(game_id).user_words
+
+def get_user_turn(game_id: str) -> Optional[str]:
+    game = get_game(game_id)
+    if len(game.user_words) == 0:
+        return game.users[0]
+    return game.users[len(game.user_words)] if len(game.user_words) != len(game.users) else None

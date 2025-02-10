@@ -1,5 +1,6 @@
 from enum import Enum
-from typing import Dict, List, Optional
+import time
+from typing import Dict, List, Optional, Any
 from serde import serde, from_dict
 from src.models._entities.user_words import Model as UserWordsModel
 from src.models._entities import BaseEntity
@@ -10,18 +11,31 @@ class Model:
     type: str
     users: List[str]
     user_words: List[UserWordsModel]
+    user_scores: Dict[str, int]
+    timestamp: float
     difficulty: Optional[int] = None
 
-    def __init__(self, id: str, type: str, users: List[str], user_words: List[UserWordsModel], difficulty: Optional[int] = None):
+    def __init__(
+            self,
+            id: str,
+            type: str,
+            users: List[str],
+            user_words = [],
+            user_scores = {},
+            timestamp: float = time.time(),
+            difficulty: Optional[int] = None
+        ):
         self.id = id
         self.type = type
         self.users = users
         self.user_words = user_words
+        self.user_scores = user_scores
+        self.timestamp = timestamp
         self.difficulty = difficulty
 
 
 class Entity(BaseEntity[Model]):
-    def _deserialize(self, data: Dict[str, str]) -> Model:
+    def _deserialize(self, data: Dict[str, Any]) -> Model:
         return from_dict(Model, data)
 
 
