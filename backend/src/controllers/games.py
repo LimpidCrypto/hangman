@@ -1,5 +1,4 @@
 
-import random
 from flask import Blueprint, request
 from werkzeug.exceptions import InternalServerError
 from serde import from_dict, to_dict
