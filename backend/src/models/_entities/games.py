@@ -1,24 +1,23 @@
 from enum import Enum
 from typing import Dict, List, Optional
 from serde import serde, from_dict
+from src.models._entities.user_words import Model as UserWordsModel
 from src.models._entities import BaseEntity
-
-@serde
-class UserWords:
-    user: str
-    word: str
-    letters_guessed: List[chr]
 
 @serde
 class Model:
     id: str
     type: str
     users: List[str]
-    user_words: List[UserWords]
+    user_words: List[UserWordsModel]
     difficulty: Optional[int] = None
 
-    def __init__(self, id: str) -> None:
+    def __init__(self, id: str, type: str, users: List[str], user_words: List[UserWordsModel], difficulty: Optional[int] = None):
         self.id = id
+        self.type = type
+        self.users = users
+        self.user_words = user_words
+        self.difficulty = difficulty
 
 
 class Entity(BaseEntity[Model]):
@@ -28,5 +27,7 @@ class Entity(BaseEntity[Model]):
 
 class Column(Enum):
     ID = "id"
-    NAME = "name"
-    LAST_ACTIVE = "last_active"
+    TYPE = "type"
+    USERS = "users"
+    USER_WORDS = "user_words"
+    DIFFICULTY = "difficulty"

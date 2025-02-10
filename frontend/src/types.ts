@@ -1,0 +1,1 @@
+export type GameType = "player_vs_player" | "player_vs_cpu";

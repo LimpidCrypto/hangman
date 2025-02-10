@@ -1,6 +1,14 @@
-from src.models._entities import UserEntity, UserModel
+from src.models._entities import GamesEntity, UserWordsEntity, GamesModel, UserWordsModel, GamesColumn, UserWordsColumn
+from src.models.games import NewGame, create_game
 
-from src.models.users import NewUserModel, create_user
-
-__all__ = ["NewUserModel", "create_user", "UserEntity", "UserModel"]
+__all__ = [
+    "GamesEntity",
+    "UserWordsEntity",
+    "GamesModel",
+    "UserWordsModel",
+    "GamesColumn",
+    "UserWordsColumn",
+    "NewGame",
+    "create_game",
+]
 

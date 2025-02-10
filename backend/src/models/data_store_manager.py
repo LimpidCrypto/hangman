@@ -7,7 +7,7 @@ from abc import ABC
 
 
 class DataList(Enum):
-    USERS = "users"
+    GAMES = "games"
 
 
 M = TypeVar("M")
