@@ -14,35 +14,6 @@ class Model:
         self.word = word
         self.letters_guessed_by = letters_guessed_by
 
-    def get_all_word_letters(self) -> List[str]:
-        return list(set(self.word))
-
-    def get_all_guessed_letters(self) -> List[str]:
-        return list(set([letter for letters in self.letters_guessed_by.values() for letter in letters]))
-
-    def get_false_letters_count(self) -> int:
-        return len([letter for letter in self.word if letter not in self.letters_guessed_by])
-
-    def get_correct_letters_count(self) -> int:
-        return len([letter for letter in self.word if letter in self.letters_guessed_by])
-
-    def add_letter_guessed(self, letter: str, username: str) -> None:
-        if username not in self.letters_guessed_by:
-            self.letters_guessed_by[username] = []
-        self.letters_guessed_by[username].append(letter)
-
-    def is_guess_successful(self) -> bool:
-        all_word_letters = self.get_all_word_letters()
-        all_guessed_letters = self.get_all_guessed_letters()
-
-        return all(letter in all_guessed_letters for letter in all_word_letters)
-
-    def is_guess_failed(self) -> bool:
-        return self.get_false_letters_count() >= 10
-
-    def is_ongoing(self) -> bool:
-        return not self.is_guess_successful() and not self.is_guess_failed()
-
 
 class Entity(BaseEntity[Model]):
     def _deserialize(self, data: Dict[str, str]) -> Model:
@@ -52,5 +23,4 @@ class Entity(BaseEntity[Model]):
 class Column(Enum):
     PICKED_BY = "picked_by"
     WORD = "word"
-    GUESSED = "guessed"
     LETTERS_GUESSED_BY = "letters_guessed_by"

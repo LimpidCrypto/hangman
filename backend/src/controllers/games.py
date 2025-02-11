@@ -4,7 +4,7 @@ from werkzeug.exceptions import InternalServerError
 from serde import from_dict, to_dict
 from typing import Tuple
 
-from src.models.games import NewGame, NewWord, add_new_word, create_game, get_game as get_game_model, get_user_to_pick as get_user_to_pick_model
+from src.models.games import NewGame, NewWord, NewLetter, add_new_letter, add_new_word, create_game, get_game as get_game_model, get_user_to_pick as get_user_to_pick_model, get_user_to_guess as get_user_to_guess_model
 
 GAMES_CONTROLLER = Blueprint("games", __name__)
 
@@ -27,6 +27,11 @@ def get_user_to_pick(game_id: str) -> str:
 
     return user_to_pick
 
+def get_user_to_guess(game_id: str) -> str:
+    user_to_guess = get_user_to_guess_model(game_id)
+
+    return user_to_guess
+
 @GAMES_CONTROLLER.errorhandler(InternalServerError)
 def add_picked_word(game_id: str) -> None:
     data = request.get_json()
@@ -38,11 +43,13 @@ def add_picked_word(game_id: str) -> None:
 def add_guessed_letter(game_id: str) -> None:
     data = request.get_json()
     new_letter = from_dict(NewLetter, data)
-    pass
+
+    return to_dict(add_new_letter(game_id, new_letter))
 
 
 GAMES_CONTROLLER.add_url_rule("/games", view_func=add_game, methods=["POST"])
 GAMES_CONTROLLER.add_url_rule("/game/<game_id>", view_func=get_game, methods=["GET"])
 GAMES_CONTROLLER.add_url_rule("/game/<game_id>/user-to-pick", view_func=get_user_to_pick, methods=["GET"])
 GAMES_CONTROLLER.add_url_rule("/game/<game_id>/pick-word", view_func=add_picked_word, methods=["POST"])
-GAMES_CONTROLLER.add_url_rule("/game/<game_id>/guess-word", view_func=add_guessed_letter, methods=["POST"])
+GAMES_CONTROLLER.add_url_rule("/game/<game_id>/user-to-guess", view_func=get_user_to_guess, methods=["GET"])
+GAMES_CONTROLLER.add_url_rule("/game/<game_id>/guess-letter", view_func=add_guessed_letter, methods=["POST"])

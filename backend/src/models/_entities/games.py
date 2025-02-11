@@ -36,6 +36,7 @@ class Model:
 
 class Entity(BaseEntity[Model]):
     def _deserialize(self, data: Dict[str, Any]) -> Model:
+        print("IUWESDOIUHOWSEW", data)
         return from_dict(Model, data)
 
 

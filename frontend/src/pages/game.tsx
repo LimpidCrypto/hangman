@@ -3,6 +3,7 @@ import DefaultLayout from "../layouts/default";
 import { GameModel } from "../types";
 import { routes } from "../config/routes";
 import { UserPickWordModal } from "../components/userPickWordModal";
+import { LetterInput } from "../components/letterInput";
 
 async function handleGetUserToPickWord(gameId: string) {
     const res = await fetch(routes.backend.userToPick(gameId));
@@ -14,6 +15,7 @@ async function handleGetUserToPickWord(gameId: string) {
 export function GamePage() {
     const [game, setGame] = useState<GameModel | null>(null);
     const [userToPickWord, setUserToPickWord] = useState<string | null>(null);
+    const [userToGuess, setUserToGuess] = useState<string | null>(null);
     const [word, setWord] = useState<string | null>(null);
 
     useEffect(() => {
@@ -21,7 +23,7 @@ export function GamePage() {
         fetch(routes.backend.game(gameId ?? ""))
             .then(res => res.json())
             .then(setGame)
-    }, [userToPickWord]);
+    }, [userToPickWord, userToGuess]);
     useEffect(() => {
         if (!game) {
             return;
@@ -43,7 +45,22 @@ export function GamePage() {
                 }
             })
     }, [game]);
-
+    useEffect(() => {
+        if (!game) {
+            return;
+        }
+        fetch(routes.backend.userToGuess(game?.id ?? ""))
+            .then(res => res.json())
+            .then((user) => {
+                if (user == null) {
+                    // todo: game over
+                    return;
+                } else {
+                    // todo: ongoing game
+                    setUserToGuess(user.user_to_guess.toString());
+                }
+            })
+    }, [game]);
 
     return (
         <DefaultLayout>
@@ -68,6 +85,7 @@ export function GamePage() {
                     <h2>Users: {game.users.join(', ')}</h2>
                 </div>
             )}
+            <LetterInput gameId={game?.id ?? ""} userToGuess={userToGuess ?? ""} setGame={setGame} />
         </DefaultLayout >
     );
 }
