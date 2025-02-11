@@ -26,6 +26,15 @@ class NewWord():
         self.word = word
         self.picked_by = picked_by
 
+@serde
+class NewLetter():
+    letter: str
+    guessed_by: str
+
+    def __init__(self, letter: str, guessed_by: str):
+        self.letter = letter
+        self.guessed_by = guessed_by
+
 def create_game(new_game: NewGame) -> str:
     try:
         print(new_game)
