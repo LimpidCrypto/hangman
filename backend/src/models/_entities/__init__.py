@@ -6,6 +6,7 @@ from src.models._entities.user_words import Model as UserWordsModel
 from src.models._entities.games import Column as GamesColumn
 from src.models._entities.user_words import Column as UserWordsColumn
 
+
 __all__ = [
     "BaseEntity",
     "GamesEntity",
@@ -13,5 +14,5 @@ __all__ = [
     "GamesModel",
     "UserWordsModel",
     "GamesColumn",
-    "UserWordsColumn"
+    "UserWordsColumn",
 ]

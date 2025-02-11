@@ -1,7 +1,16 @@
-from src.models._entities import GamesEntity, UserWordsEntity, GamesModel, UserWordsModel, GamesColumn, UserWordsColumn
-from src.models.games import NewGame, create_game, get_game
+from src.models._entities import (
+    BaseEntity,
+    GamesEntity,
+    UserWordsEntity,
+    GamesModel,
+    UserWordsModel,
+    GamesColumn,
+    UserWordsColumn,
+)
+from src.models.games import NewGame, create_game, get_game, get_user_to_pick
 
 __all__ = [
+    "BaseEntity",
     "GamesEntity",
     "UserWordsEntity",
     "GamesModel",
@@ -11,5 +20,6 @@ __all__ = [
     "NewGame",
     "create_game",
     "get_game",
+    "get_user_to_pick"
 ]
 

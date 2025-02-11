@@ -2,8 +2,8 @@ from enum import Enum
 import time
 from typing import Dict, List, Optional, Any
 from serde import serde, from_dict
+from src.models._entities.base_entity import BaseEntity
 from src.models._entities.user_words import Model as UserWordsModel
-from src.models._entities import BaseEntity
 
 @serde
 class Model:
@@ -20,8 +20,8 @@ class Model:
             id: str,
             type: str,
             users: List[str],
-            user_words = [],
-            user_scores = {},
+            user_words: List[UserWordsModel] = [],
+            user_scores: Dict[str, int] = {},
             timestamp: float = time.time(),
             difficulty: Optional[int] = None
         ):

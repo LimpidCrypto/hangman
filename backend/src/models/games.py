@@ -1,10 +1,10 @@
 from json import JSONDecodeError
-from typing import List, Optional
+from typing import List, Optional, Dict
 from uuid import uuid4
 
 from serde import SerdeError, serde
 from src.models.data_store_manager import DataList, DataStoreManager
-from src.models._entities import GamesEntity, GamesModel, GamesColumn, UserWordsModel
+from src.models import GamesEntity, GamesModel, GamesColumn, UserWordsModel
 
 @serde
 class NewGame():
@@ -41,8 +41,10 @@ def get_game(game_id: str) -> GamesModel:
 def get_user_words(game_id: str) -> List[UserWordsModel]:
     return get_game(game_id).user_words
 
-def get_user_turn(game_id: str) -> Optional[str]:
+def get_user_to_pick(game_id: str) -> Optional[str]:
     game = get_game(game_id)
-    if len(game.user_words) == 0:
-        return game.users[0]
-    return game.users[len(game.user_words)] if len(game.user_words) != len(game.users) else None
+    if len(game.user_words) == len(game.users):
+        return None
+    user_to_pick = game.users[len(game.user_words) % len(game.users)]
+
+    return user_to_pick
