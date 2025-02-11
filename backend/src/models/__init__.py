@@ -7,7 +7,7 @@ from src.models._entities import (
     GamesColumn,
     UserWordsColumn,
 )
-from src.models.games import NewGame, create_game, get_game, get_user_to_pick
+from src.models.games import NewGame, NewWord, create_game, get_game, get_user_to_pick, add_new_word
 
 __all__ = [
     "BaseEntity",
@@ -18,8 +18,10 @@ __all__ = [
     "GamesColumn",
     "UserWordsColumn",
     "NewGame",
+    "NewWord",
     "create_game",
     "get_game",
-    "get_user_to_pick"
+    "get_user_to_pick",
+    "add_new_word"
 ]
 

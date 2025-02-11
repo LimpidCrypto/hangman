@@ -28,13 +28,38 @@ export function GamePage() {
         }
         fetch(routes.backend.userToPick(game?.id ?? ""))
             .then(res => res.json())
-            .then(user => setUserToPickWord(user.user_to_pick))
+            .then((user) => {
+                if (user == null) {
+                    // todo: game over
+                    return;
+                } else if (user.user_to_pick == null) {
+                    // todo: ongoing game
+                } else {
+                    // new user to pick
+                    console.log(user);
+
+                    setUserToPickWord(user.user_to_pick.toString());
+                    (document.getElementById("userPickWordModal") as any).showModal();
+                }
+            })
     }, [game]);
 
 
     return (
         <DefaultLayout>
-            <UserPickWordModal userToPickWord={userToPickWord} onPickWord={setWord} />
+            <UserPickWordModal userToPickWord={userToPickWord} onPickWord={(word) => {
+                setWord(word);
+                fetch(routes.backend.pickWord(game?.id ?? ""), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ word: word, picked_by: userToPickWord })
+                })
+                    .then(() => {
+                        (document.getElementById("userPickWordModal") as any).close();
+                    });
+            }} />
             <h2>Game Page</h2 >
             {game && (
                 <div>

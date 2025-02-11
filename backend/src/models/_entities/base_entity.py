@@ -159,8 +159,9 @@ class BaseEntity(Generic[M], ABC):
         """
         try:
             self._read_all(dm)
-            if self.matching_entries:
-                dm.update_entry(self.data_list, to_dict(model), self.matching_entries) # TODO: implement `update_entry` method
+            if len(self.matching_entries) == 1:
+                self.remove(dm)
+                self.create(dm, self.data_list, model)
                 return model
             return None
         except (FileNotFoundError, JSONDecodeError, SerdeError) as error:

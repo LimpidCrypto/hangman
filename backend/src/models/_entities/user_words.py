@@ -31,7 +31,7 @@ class Model:
             self.letters_guessed_by[username] = []
         self.letters_guessed_by[username].append(letter)
 
-    def is_guessed(self) -> bool:
+    def is_guess_successful(self) -> bool:
         all_word_letters = self.get_all_word_letters()
         all_guessed_letters = self.get_all_guessed_letters()
 
@@ -39,6 +39,9 @@ class Model:
 
     def is_guess_failed(self) -> bool:
         return self.get_false_letters_count() >= 10
+
+    def is_ongoing(self) -> bool:
+        return not self.is_guess_successful() and not self.is_guess_failed()
 
 
 class Entity(BaseEntity[Model]):
