@@ -4,9 +4,7 @@ export const routes = {
     backend: {
         games: `${appConfig.backendUrl}/games`,
         game: (id: string) => `${appConfig.backendUrl}/game/${id}`,
-        userToPick: (gameId: string) => `${appConfig.backendUrl}/game/${gameId}/user-to-pick`,
         pickWord: (gameId: string) => `${appConfig.backendUrl}/game/${gameId}/pick-word`,
-        userToGuess: (gameId: string) => `${appConfig.backendUrl}/game/${gameId}/user-to-guess`,
         guessLetter: (gameId: string) => `${appConfig.backendUrl}/game/${gameId}/guess-letter`,
     }
 }

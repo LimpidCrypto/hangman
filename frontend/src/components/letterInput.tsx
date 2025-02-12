@@ -7,6 +7,10 @@ export interface LetterInputProps {
 }
 
 export function LetterInput({ gameId, userToGuess, setGame }: LetterInputProps) {
+    if (!userToGuess) {
+        return null;
+    }
+
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     return (
         <>

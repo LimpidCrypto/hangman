@@ -3,6 +3,7 @@ from typing import List, Optional, Dict, Union
 from uuid import uuid4
 
 from serde import SerdeError, serde, to_dict
+from src.models._entities.games import UserWords
 from src.models.data_store_manager import DataList, DataStoreManager
 from src.models import GamesEntity, GamesModel, GamesColumn, UserWordsModel
 from src.models.user_words import is_ongoing
@@ -56,10 +57,10 @@ def create_game(new_game: NewGame) -> str:
 def get_game(game_id: str) -> GamesModel:
     return GamesEntity().find(DataList.GAMES).where(GamesColumn.ID, game_id).one(DataStoreManager)
 
-def get_user_words(game_id: str) -> List[UserWordsModel]:
+def get_user_words(game_id: str) -> List[UserWords]:
     return get_game(game_id).user_words
 
-def get_ongoing_word(game_id: str) -> Optional[UserWordsModel]:
+def get_ongoing_word(game_id: str) -> Optional[UserWords]:
     user_words = get_user_words(game_id)
     for user_word in user_words:
         if is_ongoing(user_word):
@@ -67,7 +68,7 @@ def get_ongoing_word(game_id: str) -> Optional[UserWordsModel]:
 
     return None
 
-def get_user_to_pick(game_id: str) -> Optional[Union[UserWordsModel, Dict[str, str]]]:
+def get_user_to_pick(game_id: str) -> Optional[str]:
     ongoing_word = get_ongoing_word(game_id)
     if ongoing_word is None:
         # determine the next user to pick
@@ -76,27 +77,27 @@ def get_user_to_pick(game_id: str) -> Optional[Union[UserWordsModel, Dict[str, s
         users_already_picked = [user_word.picked_by for user_word in game.user_words]
         users_not_picked = [user for user in users if user not in users_already_picked]
         if len(users_not_picked) == 0:
-            return None
-        return { "user_to_pick": users_not_picked[0] }
+            raise ValueError("All users have picked a word")
+        return users_not_picked[0]
 
-    return to_dict(ongoing_word)
+    return None
 
-def get_user_to_guess(game_id: str) -> Optional[Dict[str, str]]:
+def get_user_to_guess(game_id: str) -> Optional[str]:
     game = get_game(game_id)
     ongoing_word = get_ongoing_word(game_id)
     if ongoing_word is None:
         return None
-    users_to_guess = [user for user in game.users if user != ongoing_word.picked_by]
+    users_to_guess = [user for user in game.users if user != ongoing_word["picked_by"]]
     # determine the next user to guess by finding the user that guessed the least number of times
     guess_counts = {user: 0 for user in users_to_guess}
     for user in users_to_guess:
-        if user not in ongoing_word.letters_guessed_by:
-            return { "user_to_guess": user }
-    for user, letters_guessed in ongoing_word.letters_guessed_by.items():
+        if user not in ongoing_word["letters_guessed_by"]:
+            return user
+    for user, letters_guessed in ongoing_word["letters_guessed_by"].items():
         guess_counts[user] = len(letters_guessed)
 
     next_user_to_guess = min(guess_counts, key=guess_counts.get)
-    return { "user_to_guess": next_user_to_guess }
+    return next_user_to_guess
 
 def add_new_word(game_id: str, new_word: NewWord) -> GamesModel:
     try:
@@ -112,9 +113,9 @@ def add_new_letter(game_id: str, new_letter: NewLetter) -> GamesModel:
         ongoing_word = get_ongoing_word(game_id)
         if ongoing_word is None:
             raise ValueError("No ongoing word found")
-        if new_letter.guessed_by not in ongoing_word.letters_guessed_by:
-            ongoing_word.letters_guessed_by[new_letter.guessed_by] = []
-        ongoing_word.letters_guessed_by[new_letter.guessed_by].append(new_letter.letter)
+        if new_letter.guessed_by not in ongoing_word["letters_guessed_by"]:
+            ongoing_word["letters_guessed_by"][new_letter.guessed_by] = []
+        ongoing_word["letters_guessed_by"][new_letter.guessed_by].append(new_letter.letter)
         return GamesEntity().find(DataList.GAMES).where(GamesColumn.ID, game_id).update(DataStoreManager, game)
     except (FileNotFoundError, JSONDecodeError, SerdeError) as error:
         raise error

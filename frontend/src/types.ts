@@ -1,5 +1,3 @@
-import { Option } from "ts-results";
-
 export type GameType = "player_vs_player" | "player_vs_cpu";
 
 export interface UserWordsModel {
@@ -14,5 +12,7 @@ export interface GameModel {
     users: string[];
     user_words: UserWordsModel[];
     user_scores: Record<string, number>;
-    difficulty: Option<number>;
+    difficulty?: number;
+    user_to_pick?: string;
+    user_to_guess?: string;
 }

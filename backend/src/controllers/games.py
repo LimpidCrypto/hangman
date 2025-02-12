@@ -1,5 +1,6 @@
 
 from flask import Blueprint, request
+from src.responses import GameResponse
 from werkzeug.exceptions import InternalServerError
 from serde import from_dict, to_dict
 from typing import Tuple
@@ -18,19 +19,10 @@ def add_game() -> str:
 @GAMES_CONTROLLER.errorhandler(InternalServerError)
 def get_game(game_id: str) -> str:
     game = get_game_model(game_id)
-
-    return to_dict(game)
-
-@GAMES_CONTROLLER.errorhandler(InternalServerError)
-def get_user_to_pick(game_id: str) -> str:
     user_to_pick = get_user_to_pick_model(game_id)
-
-    return user_to_pick
-
-def get_user_to_guess(game_id: str) -> str:
     user_to_guess = get_user_to_guess_model(game_id)
 
-    return user_to_guess
+    return to_dict(GameResponse(**to_dict(game), user_to_pick=user_to_pick, user_to_guess=user_to_guess))
 
 @GAMES_CONTROLLER.errorhandler(InternalServerError)
 def add_picked_word(game_id: str) -> None:
@@ -49,7 +41,5 @@ def add_guessed_letter(game_id: str) -> None:
 
 GAMES_CONTROLLER.add_url_rule("/games", view_func=add_game, methods=["POST"])
 GAMES_CONTROLLER.add_url_rule("/game/<game_id>", view_func=get_game, methods=["GET"])
-GAMES_CONTROLLER.add_url_rule("/game/<game_id>/user-to-pick", view_func=get_user_to_pick, methods=["GET"])
 GAMES_CONTROLLER.add_url_rule("/game/<game_id>/pick-word", view_func=add_picked_word, methods=["POST"])
-GAMES_CONTROLLER.add_url_rule("/game/<game_id>/user-to-guess", view_func=get_user_to_guess, methods=["GET"])
 GAMES_CONTROLLER.add_url_rule("/game/<game_id>/guess-letter", view_func=add_guessed_letter, methods=["POST"])

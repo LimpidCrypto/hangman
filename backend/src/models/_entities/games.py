@@ -1,16 +1,21 @@
 from enum import Enum
 import time
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, TypedDict, Union
 from serde import serde, from_dict
 from src.models._entities.base_entity import BaseEntity
 from src.models._entities.user_words import Model as UserWordsModel
+
+class UserWords(TypedDict):
+    picked_by: str
+    word: str
+    letters_guessed_by: Dict[str, List[str]]
 
 @serde
 class Model:
     id: str
     type: str
     users: List[str]
-    user_words: List[UserWordsModel]
+    user_words: List[Dict[str, Union[str, Dict[str, List[str]]]]]
     user_scores: Dict[str, int]
     timestamp: float
     difficulty: Optional[int] = None
@@ -20,7 +25,7 @@ class Model:
             id: str,
             type: str,
             users: List[str],
-            user_words: List[UserWordsModel] = [],
+            user_words: List[Dict[str, Union[str, Dict[str, List[str]]]]] = [],
             user_scores: Dict[str, int] = {},
             timestamp: float = time.time(),
             difficulty: Optional[int] = None
@@ -36,8 +41,8 @@ class Model:
 
 class Entity(BaseEntity[Model]):
     def _deserialize(self, data: Dict[str, Any]) -> Model:
-        print("IUWESDOIUHOWSEW", data)
-        return from_dict(Model, data)
+        model = from_dict(Model, data)
+        return model
 
 
 class Column(Enum):

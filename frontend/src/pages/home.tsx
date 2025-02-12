@@ -2,7 +2,7 @@ import { useState } from "react";
 import UserList from "../components/userList";
 import DefaultLayout from "../layouts/default";
 import { routes } from "../config/routes";
-import { Err, None, Ok, Option, Result, Some } from "ts-results";
+import { Err, Ok, Result } from "ts-results";
 import { GameModel, GameType } from "../types";
 
 const handleUserFormSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<Result<GameModel, string>> => {
@@ -34,14 +34,14 @@ const handleUserFormSubmit = async (event: React.FormEvent<HTMLFormElement>): Pr
 
 export default function HomePage() {
     const [userCount, setUserCount] = useState(2);
-    const [error, setError] = useState<Option<string>>(None);
+    const [error, setError] = useState<string | null>(null);
 
     return (
         <DefaultLayout>
             <form method="POST" onSubmit={async (e) => {
                 const gameRes = await handleUserFormSubmit(e);
                 if (gameRes.err) {
-                    setError(Some(gameRes.val));
+                    setError(gameRes.val);
                 }
 
                 window.location.href = `/game/${(gameRes.val as GameModel).id}`;
@@ -77,7 +77,7 @@ export default function HomePage() {
                 <button className="btn" disabled={userCount < 2}>Start Game</button>
                 <span hidden={userCount > 1}>You need at least 2 players to start</span>
             </form>
-            {error !== None && <div className="alert alert-error">{error.unwrap()}</div>}
+            {error !== null && <div className="alert alert-error">{error}</div>}
         </DefaultLayout >
     );
 }
