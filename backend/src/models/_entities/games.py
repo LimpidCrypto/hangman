@@ -3,7 +3,6 @@ import time
 from typing import Dict, List, Optional, Any, TypedDict, Union
 from serde import serde, from_dict
 from src.models._entities.base_entity import BaseEntity
-from src.models._entities.user_words import Model as UserWordsModel
 
 class UserWords(TypedDict):
     picked_by: str

@@ -14,12 +14,6 @@ class Model:
         self.word = word
         self.letters_guessed_by = letters_guessed_by
 
-
-class Entity(BaseEntity[Model]):
-    def _deserialize(self, data: Dict[str, str]) -> Model:
-        return from_dict(Model, data)
-
-
 class Column(Enum):
     PICKED_BY = "picked_by"
     WORD = "word"

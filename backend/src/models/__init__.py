@@ -1,10 +1,8 @@
 from src.models._entities import (
     BaseEntity,
     GamesEntity,
-    UserWordsEntity,
     UserWords,
     GamesModel,
-    UserWordsModel,
     GamesColumn,
     UserWordsColumn,
 )
@@ -13,10 +11,8 @@ from src.models.games import NewGame, NewWord, NewLetter, create_game, get_game,
 __all__ = [
     "BaseEntity",
     "GamesEntity",
-    "UserWordsEntity",
     "UserWords",
     "GamesModel",
-    "UserWordsModel",
     "GamesColumn",
     "UserWordsColumn",
     "NewGame",

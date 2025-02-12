@@ -18,9 +18,13 @@ def add_game() -> str:
 
 @GAMES_CONTROLLER.errorhandler(InternalServerError)
 def get_game(game_id: str) -> str:
-    game = get_game_model(game_id)
-    user_to_pick = get_user_to_pick_model(game_id)
-    user_to_guess = get_user_to_guess_model(game_id)
+    try:
+        game = get_game_model(game_id)
+        user_to_pick = get_user_to_pick_model(game_id)
+        user_to_guess = get_user_to_guess_model(game_id)
+    except ValueError as error:
+        if str(error) == "All users have picked a word":
+            return to_dict(GameResponse(**to_dict(game), user_to_pick=None, user_to_guess=None))
 
     return to_dict(GameResponse(**to_dict(game), user_to_pick=user_to_pick, user_to_guess=user_to_guess))
 
@@ -28,15 +32,21 @@ def get_game(game_id: str) -> str:
 def add_picked_word(game_id: str) -> None:
     data = request.get_json()
     new_word = from_dict(NewWord, data)
+    game = add_new_word(game_id, new_word)
+    user_to_pick = get_user_to_pick_model(game_id)
+    user_to_guess = get_user_to_guess_model(game_id)
 
-    return to_dict(add_new_word(game_id, new_word))
+    return to_dict(GameResponse(**to_dict(game), user_to_pick=user_to_pick, user_to_guess=user_to_guess))
 
 @GAMES_CONTROLLER.errorhandler(InternalServerError)
 def add_guessed_letter(game_id: str) -> None:
     data = request.get_json()
     new_letter = from_dict(NewLetter, data)
+    game = add_new_letter(game_id, new_letter)
+    user_to_pick = get_user_to_pick_model(game_id)
+    user_to_guess = get_user_to_guess_model(game_id)
 
-    return to_dict(add_new_letter(game_id, new_letter))
+    return to_dict(GameResponse(**to_dict(game), user_to_pick=user_to_pick, user_to_guess=user_to_guess))
 
 
 GAMES_CONTROLLER.add_url_rule("/games", view_func=add_game, methods=["POST"])

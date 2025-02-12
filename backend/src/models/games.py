@@ -5,7 +5,7 @@ from uuid import uuid4
 from serde import SerdeError, serde, to_dict
 from src.models._entities.games import UserWords
 from src.models.data_store_manager import DataList, DataStoreManager
-from src.models import GamesEntity, GamesModel, GamesColumn, UserWordsModel
+from src.models import GamesEntity, GamesModel, GamesColumn
 from src.models.user_words import is_ongoing
 
 @serde
@@ -54,8 +54,26 @@ def create_game(new_game: NewGame) -> str:
     except (FileNotFoundError, JSONDecodeError, SerdeError) as error:
         raise error
 
+
+
 def get_game(game_id: str) -> GamesModel:
-    return GamesEntity().find(DataList.GAMES).where(GamesColumn.ID, game_id).one(DataStoreManager)
+    game = GamesEntity().find(DataList.GAMES).where(GamesColumn.ID, game_id).one(DataStoreManager)
+    return _calculate_scores(game)
+
+def _calculate_scores(game: GamesModel) -> GamesModel:
+    user_scores = { username: 0 for username in game.users }
+    for user_word in game.user_words:
+        for username, letters_guessed in user_word["letters_guessed_by"].items():
+            word_list = user_word["word"].split()
+            for wl_letter in word_list:
+                if wl_letter in letters_guessed:
+                    user_scores[username] += 1
+            for letter in letters_guessed:
+                if letter not in word_list:
+                    user_scores[user_word["picked_by"]] -= 1
+    game.user_scores = user_scores
+
+    return game
 
 def get_user_words(game_id: str) -> List[UserWords]:
     return get_game(game_id).user_words
@@ -74,7 +92,7 @@ def get_user_to_pick(game_id: str) -> Optional[str]:
         # determine the next user to pick
         game = get_game(game_id)
         users = game.users
-        users_already_picked = [user_word.picked_by for user_word in game.user_words]
+        users_already_picked = [user_word["picked_by"] for user_word in game.user_words]
         users_not_picked = [user for user in users if user not in users_already_picked]
         if len(users_not_picked) == 0:
             raise ValueError("All users have picked a word")
@@ -102,7 +120,7 @@ def get_user_to_guess(game_id: str) -> Optional[str]:
 def add_new_word(game_id: str, new_word: NewWord) -> GamesModel:
     try:
         game = get_game(game_id)
-        game.user_words.append(UserWordsModel(new_word.picked_by, new_word.word))
+        game.user_words.append({"picked_by": new_word.picked_by, "word": new_word.word.upper(), "letters_guessed_by": {}})
         return GamesEntity().find(DataList.GAMES).where(GamesColumn.ID, game_id).update(DataStoreManager, game)
     except (FileNotFoundError, JSONDecodeError, SerdeError) as error:
         raise error
@@ -113,9 +131,12 @@ def add_new_letter(game_id: str, new_letter: NewLetter) -> GamesModel:
         ongoing_word = get_ongoing_word(game_id)
         if ongoing_word is None:
             raise ValueError("No ongoing word found")
+        ongoing_word_index = game.user_words.index(ongoing_word)
         if new_letter.guessed_by not in ongoing_word["letters_guessed_by"]:
             ongoing_word["letters_guessed_by"][new_letter.guessed_by] = []
-        ongoing_word["letters_guessed_by"][new_letter.guessed_by].append(new_letter.letter)
+        if new_letter.letter not in ongoing_word["letters_guessed_by"][new_letter.guessed_by]:
+            ongoing_word["letters_guessed_by"][new_letter.guessed_by].append(new_letter.letter)
+            game.user_words[ongoing_word_index] = ongoing_word
         return GamesEntity().find(DataList.GAMES).where(GamesColumn.ID, game_id).update(DataStoreManager, game)
     except (FileNotFoundError, JSONDecodeError, SerdeError) as error:
         raise error

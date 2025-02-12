@@ -1,7 +1,7 @@
 from serde import serde
 from typing import Optional, List, Dict, Union
 
-from src.models import GamesModel, UserWordsModel, UserWords
+from src.models import GamesModel, UserWords
 
 @serde
 class GameResponse:

@@ -6,6 +6,7 @@ def get_all_word_letters(model: UserWords) -> List[str]:
     return list(set(model["word"]))
 
 def get_all_guessed_letters(model: UserWords) -> List[str]:
+    print("MODEL", model)
     return list(set([letter for letters in model["letters_guessed_by"].values() for letter in letters]))
 
 def get_false_letters_count(model: UserWords) -> int:
