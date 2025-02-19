@@ -27,30 +27,32 @@ export function GamePage() {
         return <DefaultLayout>Loading...</DefaultLayout>
     }
     if (game.user_to_pick == null && game.user_to_guess == null) {
-        return <DefaultLayout><Scoreboard game={game} /></DefaultLayout>
+        return <DefaultLayout>
+            <a href="/"><button className="btn btn-warning" type="button">New Game</button></a>
+
+            <Scoreboard game={game} />
+        </DefaultLayout>
     }
     const gameId = game.id;
     const userToPick = game.user_to_pick;
     const userToGuess = game.user_to_guess;
-    const guessedLettersOfAllUsers = game.user_words.map((word) => {
-        if (word.letters_guessed_by && Object.keys(word.letters_guessed_by).length > 0) {
-            return Object.values(word.letters_guessed_by).flat();
-        }
-        return [];
-    }).flat();
+    const currentWord = game.user_words[game.user_words.length - 1] ? game.user_words[game.user_words.length - 1] : null;
+    const guessedLettersOfAllUsers = currentWord?.letters_guessed_by && Object.keys(currentWord?.letters_guessed_by).length > 0 ? Object.values(currentWord?.letters_guessed_by).flat() : []
     let falselyGuessedLetters = 0;
     guessedLettersOfAllUsers.forEach((letter) => {
-        const currentWord = game.user_words[game.user_words.length - 1] && game.user_words[game.user_words.length - 1].word;
-        if (!currentWord.includes(letter)) {
+        console.log("currentWord", currentWord);
+
+        if (!currentWord?.word.includes(letter)) {
             falselyGuessedLetters++;
         }
     })
-    console.log(falselyGuessedLetters);
-
 
     return (
         <DefaultLayout>
-            {game && <Scoreboard game={game} />}
+            {game && <div>
+                <a href="/"><button className="btn btn-warning mb-4" type="button">Reset Game</button></a>
+                <Scoreboard game={game} />
+            </div>}
             {userToPick && <UserPickWord userToPickWord={userToPick} onPickWord={(word) => {
                 fetch(routes.backend.pickWord(game?.id ?? ""), {
                     method: 'POST',
@@ -64,10 +66,14 @@ export function GamePage() {
             }} />}
 
             {
-                userToGuess && <div>
-                    <img src={routes.hangman(falselyGuessedLetters)} alt="Hangman" />
+                userToGuess && <div className="flex flex-col gap-2 items-center">
                     <Word word={game.user_words[game.user_words.length - 1]} />
-                    <LetterInput gameId={gameId} userToGuess={userToGuess} guessedLetters={guessedLettersOfAllUsers} setGame={setGame} />
+                    <div className="flex flex-row gap-2 items-center">
+                        {falselyGuessedLetters > 0 && <div className="overflow-hidden max-w-[400px]">
+                            <img src={routes.hangman(falselyGuessedLetters)} alt="Hangman" className="" />
+                        </div>}
+                        <LetterInput gameId={gameId} userToGuess={userToGuess} guessedLetters={guessedLettersOfAllUsers} setGame={setGame} />
+                    </div>
                 </div>
             }
         </DefaultLayout >

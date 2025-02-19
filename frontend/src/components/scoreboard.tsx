@@ -6,9 +6,9 @@ export interface ScoreboardProps {
 
 export function Scoreboard({ game }: ScoreboardProps) {
     return (
-        <div className="card">
+        <div className="flex flex-col gap-2">
             <h4 className="font-bold">Scoreboard</h4>
-            <table className="table-auto">
+            <table className="table table-zebra">
                 <thead>
                     <tr>
                         <th>Player</th>

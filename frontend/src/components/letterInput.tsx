@@ -15,7 +15,7 @@ export function LetterInput({ gameId, userToGuess, guessedLetters, setGame }: Le
 
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
     return (
-        <>
+        <div className="flex flex-col gap-4">
             <h3 className="text-xl">It's <b>{userToGuess}</b> turn to guess</h3>
             <div className="letter-input grid grid-flow-row grid-cols-4 gap-6">
                 {alphabet.map((letter) => (
@@ -38,6 +38,6 @@ export function LetterInput({ gameId, userToGuess, guessedLetters, setGame }: Le
                     </button>
                 ))}
             </div>
-        </>
+        </div>
     )
 }
