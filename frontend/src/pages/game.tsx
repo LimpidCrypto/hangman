@@ -66,14 +66,14 @@ export function GamePage() {
             }} />}
 
             {
-                userToGuess && <div className="flex flex-col gap-2 items-center">
-                    <Word word={game.user_words[game.user_words.length - 1]} />
-                    <div className="flex flex-row gap-2 items-center">
-                        {falselyGuessedLetters > 0 && <div className="overflow-hidden max-w-[400px]">
-                            <img src={routes.hangman(falselyGuessedLetters)} alt="Hangman" className="invert" />
-                        </div>}
-                        <LetterInput gameId={gameId} userToGuess={userToGuess} guessedLetters={guessedLettersOfAllUsers} setGame={setGame} />
+                userToGuess && <div className="flex flex-row gap-2 justify-center">
+                    <div className="flex flex-col gap-2 justify-center">
+                        <div className="overflow-hidden w-[400px] h-[400px]">
+                            {falselyGuessedLetters > 0 && <img src={routes.hangman(falselyGuessedLetters)} alt="Hangman" className="invert" />}
+                        </div>
+                        <Word word={game.user_words[game.user_words.length - 1]} />
                     </div>
+                    <LetterInput gameId={gameId} userToGuess={userToGuess} guessedLetters={guessedLettersOfAllUsers} setGame={setGame} />
                 </div>
             }
         </DefaultLayout >

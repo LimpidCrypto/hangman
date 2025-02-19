@@ -7,6 +7,7 @@ from src.models._entities.games import UserWords
 from src.models.data_store_manager import DataList, DataStoreManager
 from src.models import GamesEntity, GamesModel, GamesColumn
 from src.models.user_words import is_ongoing
+from src.types import GameType
 
 @serde
 class NewGame():

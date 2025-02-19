@@ -1,1 +1,1 @@
-[{"id": "630e723e-ea4d-41ee-82a5-740d928f8860", "type": "player_vs_player", "users": ["fvd", "dtbvrst"], "user_words": [{"picked_by": "fvd", "word": "TEST", "letters_guessed_by": {"dtbvrst": ["K", "H", "T", "E", "G", "N", "S"]}}, {"picked_by": "dtbvrst", "word": "HALLO", "letters_guessed_by": {"fvd": ["H", "L", "P", "I", "M", "Q", "A", "O"]}}], "user_scores": {"fvd": 9, "dtbvrst": 8}, "timestamp": 1739978841.7164643, "difficulty": null}]
+[]
