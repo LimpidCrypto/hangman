@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { routes } from "../config/routes";
 
 export interface LetterInputProps {
     gameId: string;
     userToGuess: string;
+    guessedLetters: string[];
     setGame: (game: any) => void;
 }
 
-export function LetterInput({ gameId, userToGuess, setGame }: LetterInputProps) {
+export function LetterInput({ gameId, userToGuess, guessedLetters, setGame }: LetterInputProps) {
     if (!userToGuess) {
         return null;
     }
@@ -29,7 +31,9 @@ export function LetterInput({ gameId, userToGuess, setGame }: LetterInputProps) 
                             .then((game) => {
                                 setGame(game);
                             })
-                    }>
+                    }
+                        disabled={guessedLetters.includes(letter)}
+                    >
                         {letter}
                     </button>
                 ))}

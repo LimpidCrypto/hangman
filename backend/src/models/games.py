@@ -64,13 +64,11 @@ def _calculate_scores(game: GamesModel) -> GamesModel:
     user_scores = { username: 0 for username in game.users }
     for user_word in game.user_words:
         for username, letters_guessed in user_word["letters_guessed_by"].items():
-            word_list = user_word["word"].split()
-            for wl_letter in word_list:
-                if wl_letter in letters_guessed:
-                    user_scores[username] += 1
-            for letter in letters_guessed:
-                if letter not in word_list:
-                    user_scores[user_word["picked_by"]] -= 1
+            matching_letters_count = list(map(lambda letter: user_word["word"].count(letter), letters_guessed))
+            not_matching_letters_count = matching_letters_count.count(0)
+            matching_letters_count = sum(matching_letters_count)
+            user_scores[username] += matching_letters_count
+            user_scores[user_word["picked_by"]] += not_matching_letters_count
     game.user_scores = user_scores
 
     return game
@@ -95,7 +93,7 @@ def get_user_to_pick(game_id: str) -> Optional[str]:
         users_already_picked = [user_word["picked_by"] for user_word in game.user_words]
         users_not_picked = [user for user in users if user not in users_already_picked]
         if len(users_not_picked) == 0:
-            raise ValueError("All users have picked a word")
+            return None
         return users_not_picked[0]
 
     return None
@@ -137,6 +135,7 @@ def add_new_letter(game_id: str, new_letter: NewLetter) -> GamesModel:
         if new_letter.letter not in ongoing_word["letters_guessed_by"][new_letter.guessed_by]:
             ongoing_word["letters_guessed_by"][new_letter.guessed_by].append(new_letter.letter)
             game.user_words[ongoing_word_index] = ongoing_word
+        _calculate_scores(game)
         return GamesEntity().find(DataList.GAMES).where(GamesColumn.ID, game_id).update(DataStoreManager, game)
     except (FileNotFoundError, JSONDecodeError, SerdeError) as error:
         raise error

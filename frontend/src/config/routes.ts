@@ -6,5 +6,6 @@ export const routes = {
         game: (id: string) => `${appConfig.backendUrl}/game/${id}`,
         pickWord: (gameId: string) => `${appConfig.backendUrl}/game/${gameId}/pick-word`,
         guessLetter: (gameId: string) => `${appConfig.backendUrl}/game/${gameId}/guess-letter`,
-    }
+    },
+    hangman: (step: number) => `/assets/${step}.png`
 }

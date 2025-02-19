@@ -3,7 +3,7 @@ export type GameType = "player_vs_player" | "player_vs_cpu";
 export interface UserWordsModel {
     user: string;
     word: string;
-    letters_guessed: string[];
+    letters_guessed_by: { [key: string]: string[] };
 }
 
 export interface GameModel {
