@@ -5,6 +5,7 @@ export interface ScoreboardProps {
 }
 
 export function Scoreboard({ game }: ScoreboardProps) {
+    const sortedScores = Object.entries(game.user_scores).sort((a, b) => b[1] - a[1]);
     return (
         <div className="flex flex-col gap-2 border border-gray-700 rounded-lg p-4">
             <h4 className="font-bold">Scoreboard</h4>
@@ -16,10 +17,10 @@ export function Scoreboard({ game }: ScoreboardProps) {
                     </tr>
                 </thead>
                 <tbody>
-                    {game.users.map((user) => (
-                        <tr key={user}>
-                            <td className="text-center">{user}</td>
-                            <td className="text-center">{game.user_scores[user]}</td>
+                    {sortedScores.map(([username, score]) => (
+                        <tr key={username}>
+                            <td>{username}</td>
+                            <td>{score}</td>
                         </tr>
                     ))}
                 </tbody>

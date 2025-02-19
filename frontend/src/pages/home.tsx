@@ -51,12 +51,12 @@ export default function HomePage() {
                         <h2 className="card-title">Enter your Usernames</h2>
                         <div className="flex gap-6">
                             <button
-                                type="button" className="btn btn-success" onClick={() => { userCount <= 4 && setUserCount(userCount + 1) }}>Add User</button>
+                                type="button" className="btn btn-success" onClick={() => { userCount <= 4 && setUserCount(userCount + 1) }}><b>+</b>Add User</button>
                             <button type="button" className="btn btn-error" onClick={() => {
                                 if (userCount > 2) {
                                     setUserCount(userCount - 1)
                                 }
-                            }}>Remove User</button>
+                            }}><b>-</b>Remove User</button>
                         </div>
                         <div className="card-actions">
                             <UserList userCount={userCount} />

@@ -69,7 +69,8 @@ def _calculate_scores(game: GamesModel) -> GamesModel:
             matching_letters_count = sum(matching_letters_count)
             user_scores[username] += matching_letters_count
             user_scores[user_word["picked_by"]] += not_matching_letters_count
-    game.user_scores = user_scores
+    sorted_user_scores = {k: v for k, v in sorted(user_scores.items(), key=lambda item: item[1], reverse=True)}
+    game.user_scores = sorted_user_scores
 
     return game
 
