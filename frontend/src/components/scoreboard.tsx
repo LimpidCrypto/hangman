@@ -6,7 +6,7 @@ export interface ScoreboardProps {
 
 export function Scoreboard({ game }: ScoreboardProps) {
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 border border-gray-700 rounded-lg p-4">
             <h4 className="font-bold">Scoreboard</h4>
             <table className="table table-zebra">
                 <thead>
